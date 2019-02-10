@@ -7,6 +7,7 @@ import (
 	"net/http"
 	"path"
 	"strings"
+	"time"
 
 	"github.com/mrfojo/go-forex/src/models"
 )
@@ -29,7 +30,15 @@ func HandleRateRequests(w http.ResponseWriter, r *http.Request) {
 		}
 	default:
 		{
-			http.Error(w, fmt.Sprintf("The requested resource '%v' is not available.", urlPath), 400)
+			{
+				date, err := utils.ExtractDate(urlPath)
+				if err != nil {
+					http.Error(w, fmt.Sprintf("The requested resource '%v' is not available.", urlPath), 400)
+
+				} else {
+					getRatesByDate(w, r, date)
+				}
+			}
 		}
 	}
 }
@@ -39,9 +48,23 @@ func getLatestRate(w http.ResponseWriter, r *http.Request) {
 		latestRate := rates.GetLatest()
 		responseJSON, err := json.Marshal(latestRate)
 		utils.ProcessError(err)
-		(w).WriteHeader(200)
-		(w).Header().Set("Content-Type", "application/json")
-		(w).Write(responseJSON)
+		w.WriteHeader(200)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(responseJSON)
+	} else {
+		http.Error(w, fmt.Sprintf("The requested resource does not support http method '%v'.", r.Method), 405)
+	}
+}
+
+//GetByDate : Get latest rate
+func getRatesByDate(w http.ResponseWriter, r *http.Request, date time.Time) {
+	if r.Method == http.MethodGet {
+		rates := rates.GetRatesByDate(date)
+		responseJSON, err := json.Marshal(rates)
+		utils.ProcessError(err)
+		w.WriteHeader(200)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(responseJSON)
 	} else {
 		http.Error(w, fmt.Sprintf("The requested resource does not support http method '%v'.", r.Method), 405)
 	}
