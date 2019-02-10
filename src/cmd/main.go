@@ -7,4 +7,5 @@ import (
 
 func main() {
 	app.InitializeData()
+	app.Run()
 }
