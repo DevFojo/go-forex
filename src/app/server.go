@@ -10,14 +10,15 @@ import (
 func Run() {
 	httpServer := &http.Server{
 		Addr:    ":5000",
-		Handler: handler(),
+		Handler: Handler,
 	}
 	fmt.Println("Server running on port 5000")
 	httpServer.ListenAndServe()
 }
 
-func handler() http.Handler {
-	mux := http.NewServeMux()
-	mux.HandleFunc("/rates/", handlers.HandleRateRequests)
-	return mux
+var Handler *http.ServeMux
+
+func init() {
+	Handler = http.NewServeMux()
+	Handler.HandleFunc("/rates/", handlers.HandleRateRequests)
 }

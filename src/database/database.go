@@ -5,8 +5,9 @@ import (
 
 	"github.com/mrfojo/go-forex/src/config"
 	"github.com/mrfojo/go-forex/src/utils"
-)
 
+	_ "github.com/mattn/go-sqlite3"
+)
 
 var Db *sql.DB
 

@@ -1,14 +1,13 @@
 package rates
 
 import (
-	"fmt"
 	"github.com/mrfojo/go-forex/src/database"
 	"github.com/mrfojo/go-forex/src/utils"
 	"math"
 	"time"
 )
 
-type LatestRate struct {
+type DayRate struct {
 	Base  string             `json:"base"`
 	Rates map[string]float64 `json:"rates"`
 }
@@ -27,7 +26,7 @@ type RateAnalysis struct {
 
 const latestRateQuery = "SELECT currency, rate FROM rates WHERE date = (SELECT date FROM rates ORDER BY  date DESC LIMIT 1)  ORDER BY currency"
 
-func GetLatest() LatestRate {
+func GetLatest() *DayRate {
 
 	rows, err := database.Db.Query(latestRateQuery)
 	utils.ProcessError(err)
@@ -47,17 +46,17 @@ func GetLatest() LatestRate {
 			rates[currency] = currencyRate
 		}
 	}
-	return LatestRate{
+	return &DayRate{
 		Base:  "EUR",
 		Rates: rates,
 	}
 }
 
-const getRateByDateQuery = "SELECT currency, rate FROM rates WHERE DATE (date) = '%v' ORDER BY currency"
+const getRateByDateQuery = "SELECT currency, rate FROM rates WHERE DATE (date) = ? ORDER BY currency"
 
-func GetRatesByDate(date time.Time) LatestRate {
+func GetRatesByDate(date time.Time) *DayRate {
 
-	rows, err := database.Db.Query(fmt.Sprintf(getRateByDateQuery, date.Format(utils.TimeLayout)))
+	rows, err := database.Db.Query(getRateByDateQuery, date.Format(utils.TimeLayout))
 	utils.ProcessError(err)
 	defer rows.Close()
 
@@ -75,7 +74,7 @@ func GetRatesByDate(date time.Time) LatestRate {
 			rates[currency] = currencyRate
 		}
 	}
-	return LatestRate{
+	return &DayRate{
 		Base:  "EUR",
 		Rates: rates,
 	}
@@ -83,7 +82,7 @@ func GetRatesByDate(date time.Time) LatestRate {
 
 const getRates = "SELECT currency, rate FROM rates"
 
-func GetAnalyzeRate() AnalyzedRate {
+func GetAnalyzeRate() *AnalyzedRate {
 	rows, err := database.Db.Query(getRates)
 	utils.ProcessError(err)
 	defer rows.Close()
@@ -114,7 +113,7 @@ func GetAnalyzeRate() AnalyzedRate {
 		}
 	}
 
-	return AnalyzedRate{
+	return &AnalyzedRate{
 		Base:          "EUR",
 		RatesAnalyses: rateDetails,
 	}

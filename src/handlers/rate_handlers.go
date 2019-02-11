@@ -12,7 +12,7 @@ import (
 	"github.com/mrfojo/go-forex/src/models"
 )
 
-func ShiftPath(p string) string {
+func shiftPath(p string) string {
 	p = path.Clean("/" + p)
 	i := strings.Index(p[1:], "/") + 1
 	if i <= 0 {
@@ -21,16 +21,19 @@ func ShiftPath(p string) string {
 	return p[i:]
 }
 
+const InvalidMethodError = "The requested resource does not support http method '%v'."
+const InvalidResourceError = "The requested resource '%v' is not available."
+
 func HandleRateRequests(w http.ResponseWriter, r *http.Request) {
-	switch urlPath := ShiftPath(r.URL.Path); urlPath {
+	switch urlPath := shiftPath(r.URL.Path); urlPath {
 	case "/latest":
 		{
-			getLatestRate(w, r)
+			getLatestRate(&w, r)
 			return
 		}
 	case "/analyze":
 		{
-			getAnalyzedRate(w, r)
+			getAnalyzedRate(&w, r)
 			return
 		}
 	default:
@@ -38,52 +41,51 @@ func HandleRateRequests(w http.ResponseWriter, r *http.Request) {
 			{
 				date, err := utils.ExtractDate(urlPath)
 				if err != nil {
-					http.Error(w, fmt.Sprintf("The requested resource '%v' is not available.", urlPath), 400)
+					http.Error(w, fmt.Sprintf(InvalidResourceError, urlPath), 400)
 
 				} else {
-					getRatesByDate(w, r, date)
+					getRatesByDate(&w, r, date)
 				}
 			}
 		}
 	}
 }
 
-func getAnalyzedRate(w http.ResponseWriter, r *http.Request) {
+func getAnalyzedRate(w *http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		analyzedRate := rates.GetAnalyzeRate()
 		responseJSON, err := json.Marshal(analyzedRate)
 		utils.ProcessError(err)
-		w.WriteHeader(200)
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(responseJSON)
+		(*w).WriteHeader(200)
+		(*w).Header().Set("Content-Type", "application/json")
+		(*w).Write(responseJSON)
 	} else {
-		http.Error(w, fmt.Sprintf("The requested resource does not support http method '%v'.", r.Method), 405)
+		http.Error(*w, fmt.Sprintf(InvalidMethodError, r.Method), 405)
 	}
 }
 
-func getLatestRate(w http.ResponseWriter, r *http.Request) {
+func getLatestRate(w *http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodGet {
 		latestRate := rates.GetLatest()
 		responseJSON, err := json.Marshal(latestRate)
 		utils.ProcessError(err)
-		w.WriteHeader(200)
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(responseJSON)
+		(*w).WriteHeader(200)
+		(*w).Header().Set("Content-Type", "application/json")
+		(*w).Write(responseJSON)
 	} else {
-		http.Error(w, fmt.Sprintf("The requested resource does not support http method '%v'.", r.Method), 405)
+		http.Error(*w, fmt.Sprintf(InvalidMethodError, r.Method), 405)
 	}
 }
 
-//GetByDate : Get latest rate
-func getRatesByDate(w http.ResponseWriter, r *http.Request, date time.Time) {
+func getRatesByDate(w *http.ResponseWriter, r *http.Request, date time.Time) {
 	if r.Method == http.MethodGet {
 		rates := rates.GetRatesByDate(date)
 		responseJSON, err := json.Marshal(rates)
 		utils.ProcessError(err)
-		w.WriteHeader(200)
-		w.Header().Set("Content-Type", "application/json")
-		w.Write(responseJSON)
+		(*w).WriteHeader(200)
+		(*w).Header().Set("Content-Type", "application/json")
+		(*w).Write(responseJSON)
 	} else {
-		http.Error(w, fmt.Sprintf("The requested resource does not support http method '%v'.", r.Method), 405)
+		http.Error(*w, fmt.Sprintf(InvalidMethodError, r.Method), 405)
 	}
 }

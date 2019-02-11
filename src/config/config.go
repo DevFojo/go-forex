@@ -1,9 +1,9 @@
 package config
 
-var HistorialRateURL string
+var HistoricalRateURL string
 var DatabasePath string
 
 func init() {
 	DatabasePath = "../../dev.db"
-	HistorialRateURL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml"
+	HistoricalRateURL = "https://www.ecb.europa.eu/stats/eurofxref/eurofxref-hist-90d.xml"
 }
