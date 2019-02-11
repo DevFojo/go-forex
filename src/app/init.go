@@ -11,7 +11,7 @@ import (
 	"github.com/mrfojo/go-forex/src/utils"
 )
 
-type DailyRate struct {
+type dailyRate struct {
 	Time string `xml:"time,attr"`
 	Cube []struct {
 		Currency string `xml:"currency,attr"`
@@ -19,14 +19,14 @@ type DailyRate struct {
 	} `xml:"Cube"`
 }
 
-type RateXML struct {
+type rateXML struct {
 	XMLName xml.Name `xml:"Envelope"`
 	Cube    struct {
-		Cube []DailyRate `xml:"Cube"`
+		Cube []dailyRate `xml:"Cube"`
 	} `xml:"Cube"`
 }
 
-func getInitialRates() *RateXML {
+func getInitialRates() *rateXML {
 	data, err := http.Get(config.HistoricalRateURL)
 	utils.ProcessError(err)
 
@@ -34,12 +34,12 @@ func getInitialRates() *RateXML {
 	body, err := ioutil.ReadAll(data.Body)
 	utils.ProcessError(err)
 
-	var rateXML RateXML
+	var rateXML rateXML
 	xml.Unmarshal(body, &rateXML)
 	return &rateXML
 }
 
-func InitializeData() {
+func EnsureInitializeData() {
 
 	ensureCreateRatesTable()
 	if !checkIfRatesHasRecords() {
@@ -50,7 +50,7 @@ func InitializeData() {
 	}
 }
 
-func saveRates(dailyRates *[]DailyRate) {
+func saveRates(dailyRates *[]dailyRate) {
 	var params []interface{}
 	saveRatesCommand := "INSERT INTO rates (date, currency, rate) VALUES "
 
