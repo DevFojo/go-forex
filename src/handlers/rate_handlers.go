@@ -28,6 +28,11 @@ func HandleRateRequests(w http.ResponseWriter, r *http.Request) {
 			getLatestRate(w, r)
 			return
 		}
+	case "/analyze":
+		{
+			getAnalyzedRate(w, r)
+			return
+		}
 	default:
 		{
 			{
@@ -40,6 +45,19 @@ func HandleRateRequests(w http.ResponseWriter, r *http.Request) {
 				}
 			}
 		}
+	}
+}
+
+func getAnalyzedRate(w http.ResponseWriter, r *http.Request) {
+	if r.Method == http.MethodGet {
+		analyzedRate := rates.GetAnalyzeRate()
+		responseJSON, err := json.Marshal(analyzedRate)
+		utils.ProcessError(err)
+		w.WriteHeader(200)
+		w.Header().Set("Content-Type", "application/json")
+		w.Write(responseJSON)
+	} else {
+		http.Error(w, fmt.Sprintf("The requested resource does not support http method '%v'.", r.Method), 405)
 	}
 }
 
