@@ -7,7 +7,6 @@ import (
 	"time"
 
 	"github.com/mrfojo/go-forex/src/database"
-
 	"github.com/mrfojo/go-forex/src/config"
 	"github.com/mrfojo/go-forex/src/utils"
 )
