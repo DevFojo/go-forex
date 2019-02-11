@@ -2,10 +2,11 @@ package app
 
 import (
 	"encoding/xml"
-	"github.com/mrfojo/go-forex/src/database"
 	"io/ioutil"
 	"net/http"
 	"time"
+
+	"github.com/mrfojo/go-forex/src/database"
 
 	"github.com/mrfojo/go-forex/src/config"
 	"github.com/mrfojo/go-forex/src/utils"
@@ -51,22 +52,26 @@ func EnsureInitializeData() {
 }
 
 func saveRates(dailyRates *[]dailyRate) {
-	var params []interface{}
-	saveRatesCommand := "INSERT INTO rates (date, currency, rate) VALUES "
 
 	for _, r := range *dailyRates {
-		var date, _ = time.Parse(utils.TimeLayout, r.Time)
+		date, _ := time.Parse(utils.TimeLayout, r.Time)
+		dateString := date.Format("2006-01-02T15:04:05.999999999")
+		var params []interface{}
+		saveRatesCommand := "INSERT INTO rates (date, currency, rate) VALUES "
+
 		for _, c := range r.Cube {
-			saveRatesCommand += " (?, ?, ?)"
-			params = append(params, date.Format("2006-01-02T15:04:05.999999999"), c.Currency, c.Rate)
+			saveRatesCommand += " (?, ?, ?) ,"
+			params = append(params, dateString, c.Currency, c.Rate)
 		}
+
+		saveRatesCommand = saveRatesCommand[0 : len(saveRatesCommand)-2]
+
+		statement, err := database.Db.Prepare(saveRatesCommand)
+		utils.ProcessError(err)
+
+		_, err = statement.Exec(params...)
+		utils.ProcessError(err)
 	}
-
-	statement, err := database.Db.Prepare(saveRatesCommand)
-	utils.ProcessError(err)
-
-	_, err = statement.Exec(params)
-	utils.ProcessError(err)
 }
 
 func checkIfRatesHasRecords() bool {
