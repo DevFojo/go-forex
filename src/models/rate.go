@@ -1,10 +1,11 @@
 package rates
 
 import (
-	"github.com/mrfojo/go-forex/src/database"
-	"github.com/mrfojo/go-forex/src/utils"
 	"math"
 	"time"
+
+	"github.com/mrfojo/go-forex/src/database"
+	"github.com/mrfojo/go-forex/src/utils"
 )
 
 type DayRate struct {
@@ -56,7 +57,17 @@ const getRateByDateQuery = "SELECT currency, rate FROM rates WHERE DATE (date) =
 
 func GetRatesByDate(date time.Time) *DayRate {
 
-	rows, err := database.Db.Query(getRateByDateQuery, date.Format(utils.TimeLayout))
+	weekDay := date.Weekday()
+	var queryDate time.Time
+	if weekDay == 0 {
+		queryDate = date.AddDate(0, 0, -2)
+	} else if weekDay == 6 {
+		queryDate = date.AddDate(0, 0, -1)
+	} else {
+		queryDate = date
+	}
+
+	rows, err := database.Db.Query(getRateByDateQuery, queryDate.Format(utils.TimeLayout))
 	utils.ProcessError(err)
 	defer rows.Close()
 
