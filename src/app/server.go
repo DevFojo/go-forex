@@ -4,7 +4,7 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/mrfojo/go-forex/src/handlers"
+	"github.com/MrFojo/go-forex/src/handlers"
 )
 
 func Run() {

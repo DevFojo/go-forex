@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/mrfojo/go-forex/src/app"
+	"github.com/MrFojo/go-forex/src/app"
 )
 
 func main() {

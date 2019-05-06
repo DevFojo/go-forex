@@ -3,8 +3,8 @@ package database
 import (
 	"database/sql"
 
-	"github.com/mrfojo/go-forex/src/config"
-	"github.com/mrfojo/go-forex/src/utils"
+	"github.com/MrFojo/go-forex/src/config"
+	"github.com/MrFojo/go-forex/src/utils"
 
 	_ "github.com/mattn/go-sqlite3"
 )

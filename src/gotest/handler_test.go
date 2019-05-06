@@ -7,7 +7,7 @@ import (
 	"testing"
 
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/mrfojo/go-forex/src/app"
+	"github.com/MrFojo/go-forex/src/app"
 )
 
 func TestGetLatestRateHandler(t *testing.T) {

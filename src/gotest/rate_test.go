@@ -4,7 +4,7 @@ import (
 	"testing"
 	"time"
 
-	rates "github.com/mrfojo/go-forex/src/models"
+	rates "github.com/MrFojo/go-forex/src/models"
 )
 
 func TestGetLatestRate(t *testing.T) {

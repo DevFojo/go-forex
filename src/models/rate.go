@@ -4,8 +4,8 @@ import (
 	"math"
 	"time"
 
-	"github.com/mrfojo/go-forex/src/database"
-	"github.com/mrfojo/go-forex/src/utils"
+	"github.com/MrFojo/go-forex/src/database"
+	"github.com/MrFojo/go-forex/src/utils"
 )
 
 type DayRate struct {

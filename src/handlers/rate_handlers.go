@@ -3,13 +3,13 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/mrfojo/go-forex/src/utils"
+	"github.com/MrFojo/go-forex/src/utils"
 	"net/http"
 	"path"
 	"strings"
 	"time"
 
-	"github.com/mrfojo/go-forex/src/models"
+	"github.com/MrFojo/go-forex/src/models"
 )
 
 func shiftPath(p string) string {
