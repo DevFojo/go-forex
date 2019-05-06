@@ -7,8 +7,10 @@ import (
 	"github.com/MrFojo/go-forex/src/handlers"
 )
 
-func Run() {
-	httpServer := &http.Server{
+func Run() { 
+ 
+	httpServer := &http.Server{ 
+ 
 		Addr:    ":5000",
 		Handler: Handler,
 	}
@@ -18,7 +20,8 @@ func Run() {
 
 var Handler *http.ServeMux
 
-func init() {
+func init() { 
+ 
 	Handler = http.NewServeMux()
 	Handler.HandleFunc("/rates/", handlers.HandleRateRequests)
 }

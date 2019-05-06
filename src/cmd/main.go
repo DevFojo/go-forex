@@ -4,7 +4,8 @@ import (
 	"github.com/MrFojo/go-forex/src/app"
 )
 
-func main() {
+func main() { 
+ 
 	app.EnsureInitializeData()
 	app.Run()
 }

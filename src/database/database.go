@@ -11,7 +11,8 @@ import (
 
 var Db *sql.DB
 
-func init() {
+func init() { 
+ 
 	db, err := sql.Open("sqlite3", config.DatabasePath)
 	utils.ProcessError(err)
 	Db = db

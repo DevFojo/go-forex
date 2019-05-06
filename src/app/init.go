@@ -6,8 +6,8 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/MrFojo/go-forex/src/database"
 	"github.com/MrFojo/go-forex/src/config"
+	"github.com/MrFojo/go-forex/src/database"
 	"github.com/MrFojo/go-forex/src/utils"
 )
 
@@ -27,6 +27,7 @@ type rateXML struct {
 }
 
 func getInitialRates() *rateXML {
+
 	data, err := http.Get(config.HistoricalRateURL)
 	utils.ProcessError(err)
 
@@ -43,8 +44,10 @@ func EnsureInitializeData() {
 
 	ensureCreateRatesTable()
 	if !checkIfRatesHasRecords() {
+
 		rates := getInitialRates()
 		if len(rates.Cube.Cube) > 0 {
+
 			saveRates(&rates.Cube.Cube)
 		}
 	}
@@ -53,12 +56,15 @@ func EnsureInitializeData() {
 func saveRates(dailyRates *[]dailyRate) {
 
 	for _, r := range *dailyRates {
+
 		date, _ := time.Parse(utils.TimeLayout, r.Time)
 		dateString := date.Format("2006-01-02T15:04:05.999999999")
-		var params []interface{}
+		var params []interface {
+		}
 		saveRatesCommand := "INSERT INTO rates (date, currency, rate) VALUES "
 
 		for _, c := range r.Cube {
+
 			saveRatesCommand += " (?, ?, ?) ,"
 			params = append(params, dateString, c.Currency, c.Rate)
 		}
@@ -74,6 +80,7 @@ func saveRates(dailyRates *[]dailyRate) {
 }
 
 func checkIfRatesHasRecords() bool {
+
 	const getFirstRateRecord = "SELECT * FROM rates"
 
 	statement, err := database.Db.Prepare(getFirstRateRecord)
@@ -83,6 +90,7 @@ func checkIfRatesHasRecords() bool {
 	utils.ProcessError(err)
 
 	if rows.Next() {
+
 		return true
 	}
 	return false
@@ -90,6 +98,7 @@ func checkIfRatesHasRecords() bool {
 }
 
 func ensureCreateRatesTable() {
+
 	const createDbCommand = "CREATE TABLE IF NOT EXISTS rates (id INTEGER PRIMARY KEY, date TIMESTAMP,  currency TEXT, rate FLOAT)"
 
 	statement, err := database.Db.Prepare(createDbCommand)

@@ -6,15 +6,18 @@ import (
 	"testing"
 )
 
-func TestEnsureInitializeData(t *testing.T) {
+func TestEnsureInitializeData(t *testing.T) { 
+ 
 	app.EnsureInitializeData()
 
 	a := database.Db.QueryRow("SELECT  COUNT(*) FROM rates")
 	var count int
-	if err := a.Scan(&count); err != nil {
+	if err := a.Scan(&count); err != nil { 
+ 
 		t.Error(err.Error())
 	}
-	if count <= 0 {
+	if count <= 0 { 
+ 
 		t.Error("Date initialization saved no record")
 	}
 }
