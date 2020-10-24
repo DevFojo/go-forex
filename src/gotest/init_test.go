@@ -1,8 +1,8 @@
 package gotest
 
 import (
-	"github.com/MrFojo/go-forex/src/app"
-	"github.com/MrFojo/go-forex/src/database"
+	"github.com/devFojo/go-forex/app"
+	"github.com/devFojo/go-forex/database"
 	"testing"
 )
 

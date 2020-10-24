@@ -6,8 +6,8 @@ import (
 	"strings"
 	"testing"
 
+	"github.com/devFojo/go-forex/app"
 	_ "github.com/mattn/go-sqlite3"
-	"github.com/MrFojo/go-forex/src/app"
 )
 
 func TestGetLatestRateHandler(t *testing.T) {

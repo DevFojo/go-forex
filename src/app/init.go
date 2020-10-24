@@ -6,9 +6,9 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/MrFojo/go-forex/src/database"
-	"github.com/MrFojo/go-forex/src/config"
-	"github.com/MrFojo/go-forex/src/utils"
+	"github.com/devFojo/go-forex/config"
+	"github.com/devFojo/go-forex/database"
+	"github.com/devFojo/go-forex/utils"
 )
 
 type dailyRate struct {
@@ -30,12 +30,15 @@ func getInitialRates() *rateXML {
 	data, err := http.Get(config.HistoricalRateURL)
 	utils.ProcessError(err)
 
-	defer data.Body.Close()
+	defer func() {
+		_ = data.Body.Close()
+	}()
+
 	body, err := ioutil.ReadAll(data.Body)
 	utils.ProcessError(err)
 
 	var rateXML rateXML
-	xml.Unmarshal(body, &rateXML)
+	_ = xml.Unmarshal(body, &rateXML)
 	return &rateXML
 }
 

@@ -4,16 +4,16 @@ import (
 	"fmt"
 	"net/http"
 
-	"github.com/MrFojo/go-forex/src/handlers"
+	"github.com/devFojo/go-forex/handlers"
 )
 
-func Run() {
+func Run() error {
 	httpServer := &http.Server{
 		Addr:    ":5000",
 		Handler: Handler,
 	}
 	fmt.Println("Server running on port 5000")
-	httpServer.ListenAndServe()
+	return httpServer.ListenAndServe()
 }
 
 var Handler *http.ServeMux

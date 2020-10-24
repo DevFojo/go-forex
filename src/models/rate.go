@@ -4,8 +4,8 @@ import (
 	"math"
 	"time"
 
-	"github.com/MrFojo/go-forex/src/database"
-	"github.com/MrFojo/go-forex/src/utils"
+	"github.com/devFojo/go-forex/database"
+	"github.com/devFojo/go-forex/utils"
 )
 
 type DayRate struct {
@@ -31,7 +31,9 @@ func GetLatest() *DayRate {
 
 	rows, err := database.Db.Query(latestRateQuery)
 	utils.ProcessError(err)
-	defer rows.Close()
+	defer func() {
+		_ = rows.Close()
+	}()
 
 	rates := make(map[string]float64, 1)
 
@@ -69,7 +71,9 @@ func GetRatesByDate(date time.Time) *DayRate {
 
 	rows, err := database.Db.Query(getRateByDateQuery, queryDate.Format(utils.TimeLayout))
 	utils.ProcessError(err)
-	defer rows.Close()
+	defer func() {
+		_ = rows.Close()
+	}()
 
 	rates := make(map[string]float64, 1)
 
@@ -96,7 +100,9 @@ const getRates = "SELECT currency, rate FROM rates"
 func GetAnalyzeRate() *AnalyzedRate {
 	rows, err := database.Db.Query(getRates)
 	utils.ProcessError(err)
-	defer rows.Close()
+	defer func() {
+		_ = rows.Close()
+	}()
 
 	rateDetails := make(map[string]RateAnalysis, 1)
 

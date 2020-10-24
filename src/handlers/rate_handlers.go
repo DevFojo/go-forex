@@ -3,13 +3,14 @@ package handlers
 import (
 	"encoding/json"
 	"fmt"
-	"github.com/MrFojo/go-forex/src/utils"
 	"net/http"
 	"path"
 	"strings"
 	"time"
 
-	"github.com/MrFojo/go-forex/src/models"
+	"github.com/devFojo/go-forex/utils"
+
+	"github.com/devFojo/go-forex/models"
 )
 
 func shiftPath(p string) string {
@@ -58,7 +59,7 @@ func getAnalyzedRate(w *http.ResponseWriter, r *http.Request) {
 		utils.ProcessError(err)
 		(*w).WriteHeader(200)
 		(*w).Header().Set("Content-Type", "application/json")
-		(*w).Write(responseJSON)
+		_, _ = (*w).Write(responseJSON)
 	} else {
 		http.Error(*w, fmt.Sprintf(InvalidMethodError, r.Method), 405)
 	}
@@ -71,7 +72,7 @@ func getLatestRate(w *http.ResponseWriter, r *http.Request) {
 		utils.ProcessError(err)
 		(*w).WriteHeader(200)
 		(*w).Header().Set("Content-Type", "application/json")
-		(*w).Write(responseJSON)
+		_, _ = (*w).Write(responseJSON)
 	} else {
 		http.Error(*w, fmt.Sprintf(InvalidMethodError, r.Method), 405)
 	}
@@ -79,12 +80,12 @@ func getLatestRate(w *http.ResponseWriter, r *http.Request) {
 
 func getRatesByDate(w *http.ResponseWriter, r *http.Request, date time.Time) {
 	if r.Method == http.MethodGet {
-		rates := rates.GetRatesByDate(date)
-		responseJSON, err := json.Marshal(rates)
+		dateRate := rates.GetRatesByDate(date)
+		responseJSON, err := json.Marshal(dateRate)
 		utils.ProcessError(err)
 		(*w).WriteHeader(200)
 		(*w).Header().Set("Content-Type", "application/json")
-		(*w).Write(responseJSON)
+		_, _ = (*w).Write(responseJSON)
 	} else {
 		http.Error(*w, fmt.Sprintf(InvalidMethodError, r.Method), 405)
 	}

@@ -1,10 +1,12 @@
 package main
 
 import (
-	"github.com/MrFojo/go-forex/src/app"
+	"github.com/devFojo/go-forex/app"
 )
 
 func main() {
 	app.EnsureInitializeData()
-	app.Run()
+	if err := app.Run(); err != nil {
+		panic(err)
+	}
 }
